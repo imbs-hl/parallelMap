@@ -127,7 +127,7 @@ parallelMap = function(fun, ..., more.args = list(), simplify = FALSE, use.names
         BatchJobs::batchMap(reg, slaveWrapper, ..., more.args = more.args)
         # increase max.retries a bit, we dont want to abort here prematurely
         # if no resources set we submit with the default ones from the bj conf
-        BatchJobs::submitJobs(reg, resources = getPMOptBatchJobsResources(), max.retries = 15)
+        BatchJobs::submitJobs(reg, ids = chunk(getJobIds(reg), n.chunks = 1), resources = getPMOptBatchJobsResources(), max.retries = 15)
         ok = BatchJobs::waitForJobs(reg, stop.on.error = stop.on.error)
       })
       # copy log files of terminated jobs to designated dir
