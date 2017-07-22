@@ -2,12 +2,12 @@
 % Please edit documentation in R/parallelStart.R
 \name{parallelStart}
 \alias{parallelStart}
-\alias{parallelStartBatchJobs}
-\alias{parallelStartBatchtools}
 \alias{parallelStartLocal}
-\alias{parallelStartMPI}
 \alias{parallelStartMulticore}
 \alias{parallelStartSocket}
+\alias{parallelStartMPI}
+\alias{parallelStartBatchJobs}
+\alias{parallelStartBatchtools}
 \title{Parallelization setup for parallelMap.}
 \usage{
 parallelStart(mode, cpus, socket.hosts, bj.resources = list(),
@@ -102,10 +102,8 @@ Default ist FALSE, i.e. every error message is shown.}
 
 \item{...}{[any]\cr
 Optional parameters, for socket mode passed to \code{\link[parallel]{makePSOCKcluster}},
-for mpi mode passed to \code{\link[parallel]{makeCluster}} and for multicore
-passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}),
-\code{mc.set.seed},
-\code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{submitJobs}} (\code{n.chunks} (if less than 1 no chunking of jobs) and \code{chunks.as.arrayjobs} are possible) or \code{\link[BatchJobs]{makeRegistry}} (\code{work.dir} is possible).}
+for mpi mode passed to \code{\link[parallel]{makeCluster}}, for multicore
+passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir} and \code{work.dir}).}
 }
 \value{
 Nothing.
@@ -133,4 +131,3 @@ to functions from different parallelization packages:
 For BatchJobs mode you need to define a storage directory through the argument \code{storagedir} or
 the option \code{parallelMap.default.storagedir}.
 }
-
