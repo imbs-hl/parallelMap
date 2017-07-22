@@ -48,12 +48,8 @@ getPMOptBatchJobsResources = function() {
   getPMOption("bj.resources", list())
 }
 
-getPMOptChunks = function() {
-  getPMOption("nchunks", 0)
-}
-
-getPMOptChunksAsArray = function() {
-  getPMOption("chunksasarrayjobs", FALSE)
+getPMOptBatchtoolsResources = function() {
+  getPMOption("bt.resources", list())
 }
 
 getPMOptNextMap = function() {
@@ -138,6 +134,11 @@ isModeMPI = function() {
 isModeBatchJobs = function() {
   getPMOptMode() == MODE_BATCHJOBS
 }
+
+isModeBatchtools = function() {
+  getPMOptMode() == MODE_BATCHTOOLS
+}
+
 
 ##### status #####
 

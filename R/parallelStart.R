@@ -44,6 +44,9 @@
 #'   Resources like walltime for submitting jobs on HPC clusters via BatchJobs.
 #'   See \code{\link[BatchJobs]{submitJobs}}.
 #'   Defaults are taken from your BatchJobs config file.
+#' @param bt.resources [\code{list}]\cr
+#'   Analog to \code{bj.resources}.
+#'   See \code{\link[batchtools]{submitJobs}}.
 #' @param logging [\code{logical(1)}]\cr
 #'   Should slave output be logged to files via \code{\link{sink}} under the \code{storagedir}?
 #'   Files are named "<iteration_number>.log" and put into unique
@@ -81,10 +84,10 @@
 #'   for mpi mode passed to \code{\link[parallel]{makeCluster}} and for multicore
 #'   passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}),
 #'   \code{mc.set.seed},
-#'   \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{submitJobs}} (\code{n.chunks} (if less than 1 no chunking of jobs) and \code{chunks.as.arrayjobs} are possible) or \code{\link[BatchJobs]{makeRegistry}} (\code{work.dir} is possible).
+#'   \code{mc.silent} and \code{mc.cleanup} are supported for multicore).
 #' @return Nothing.
 #' @export
-parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), logging, storagedir, level, load.balancing = FALSE,
+parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.resources = list(), logging, storagedir, level, load.balancing = FALSE,
   show.info, suppress.local.errors = FALSE, ...) {
   # if stop was not called, warn and do it now
   if (isStatusStarted() && !isModeLocal()) {
@@ -109,6 +112,7 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), loggin
   storagedir = getPMDefOptStorageDir(storagedir)
   # defaults are in batchjobs conf
   assertList(bj.resources)
+  assertList(bt.resources)
   assertFlag(load.balancing)
   show.info = getPMDefOptShowInfo(show.info)
 
@@ -123,6 +127,7 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), loggin
   options(parallelMap.logging = logging)
   options(parallelMap.storagedir = storagedir)
   options(parallelMap.bj.resources = bj.resources)
+  options(parallelMap.bt.resources = bt.resources)
   options(parallelMap.load.balancing = load.balancing)
   options(parallelMap.show.info = show.info)
   options(parallelMap.status = STATUS_STARTED)
@@ -176,27 +181,17 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), loggin
     setDefaultCluster(cl)
     clusterSetRNGStream(cl = NULL)
   } else if (isModeBatchJobs()) {
-    args = list(...)
-    if(checkmate::testFlag(args$chunks.as.arrayjobs)) {
-      options(parallelMap.chunksasarrayjobs = args$chunks.as.arrayjobs)
-    } else {
-      options(parallelMap.chunksasarrayjobs = NULL)
-    }
-    if(checkmate::testInt(args$n.chunks)) {
-      options(parallelMap.nchunks = args$n.chunks)
-    } else {
-      options(parallelMap.nchunks = NULL)
-    }
     # create registry in selected directory with random, unique name
     fd = getBatchJobsNewRegFileDir()
-    if(checkmate::testDirectory(args$work.dir)) {
-      wd = args$work.dir
-    } else {
-      wd = getwd()
-    }
     suppressMessages({
-      reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = wd)
+      reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd())
     })
+  } else if (isModeBatchtools()) {
+    fd = getBatchtoolsNewRegFileDir()
+    old = getOption("batchtools.verbose")
+    options(batchtools.verbose = FALSE)
+    on.exit(options(batchtools.verbose = old))
+    reg = batchtools::makeRegistry(file.dir = fd, work.dir = getwd())
   }
   invisible(NULL)
 }
@@ -234,4 +229,11 @@ parallelStartMPI = function(cpus, logging, storagedir, level, load.balancing = F
 parallelStartBatchJobs = function(bj.resources = list(), logging, storagedir, level, show.info, ...) {
   parallelStart(mode = MODE_BATCHJOBS, level = level, logging = logging,
     storagedir = storagedir, bj.resources = bj.resources, show.info = show.info, ...)
+}
+
+#' @export
+#' @rdname parallelStart
+parallelStartBatchtools = function(bt.resources = list(), logging, storagedir, level, show.info, ...) {
+  parallelStart(mode = MODE_BATCHTOOLS, level = level, logging = logging,
+    storagedir = storagedir, bt.resources = bt.resources, show.info = show.info, ...)
 }
