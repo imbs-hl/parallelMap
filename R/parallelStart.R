@@ -115,7 +115,7 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), loggin
   # multicore not supported on windows
   if (mode == MODE_MULTICORE && .Platform$OS.type == "windows")
     stop("Multicore mode not supported on windows!")
-  assertDirectory(storagedir, access = "w")
+  assertDirectoryExists(storagedir, access = "w")
 
   # store options for session, we already need them for helper funs below
   options(parallelMap.mode = mode)
@@ -210,23 +210,23 @@ parallelStartLocal = function(show.info, suppress.local.errors = FALSE, ...) {
 
 #' @export
 #' @rdname parallelStart
-parallelStartMulticore = function(cpus, logging, storagedir, level, load.balancing, show.info, ...) {
+parallelStartMulticore = function(cpus, logging, storagedir, level, load.balancing = FALSE, show.info, ...) {
   parallelStart(mode = MODE_MULTICORE, cpus = cpus, level = level, logging = logging,
-    storagedir = storagedir, load.balancing = FALSE, show.info = show.info, ...)
+    storagedir = storagedir, load.balancing = load.balancing, show.info = show.info, ...)
 }
 
 #' @export
 #' @rdname parallelStart
-parallelStartSocket = function(cpus, socket.hosts, logging, storagedir, level, load.balancing, show.info, ...) {
+parallelStartSocket = function(cpus, socket.hosts, logging, storagedir, level, load.balancing = FALSE, show.info, ...) {
   parallelStart(mode = MODE_SOCKET, cpus = cpus, socket.hosts = socket.hosts, level = level, logging = logging,
-    storagedir = storagedir, load.balancing = FALSE, show.info = show.info, ...)
+    storagedir = storagedir, load.balancing = load.balancing, show.info = show.info, ...)
 }
 
 #' @export
 #' @rdname parallelStart
-parallelStartMPI = function(cpus, logging, storagedir, level, load.balancing, show.info, ...) {
+parallelStartMPI = function(cpus, logging, storagedir, level, load.balancing = FALSE, show.info, ...) {
   parallelStart(mode = MODE_MPI, cpus = cpus, level = level, logging = logging,
-    storagedir = storagedir, load.balancing = FALSE, show.info = show.info, ...)
+    storagedir = storagedir, load.balancing = load.balancing, show.info = show.info, ...)
 }
 
 #' @export
