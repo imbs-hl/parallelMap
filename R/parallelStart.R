@@ -81,10 +81,8 @@
 #'   Default ist FALSE, i.e. every error message is shown.
 #' @param ... [any]\cr
 #'   Optional parameters, for socket mode passed to \code{\link[parallel]{makePSOCKcluster}},
-#'   for mpi mode passed to \code{\link[parallel]{makeCluster}} and for multicore
-#'   passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}),
-#'   \code{mc.set.seed},
-#'   \code{mc.silent} and \code{mc.cleanup} are supported for multicore).
+#'   for mpi mode passed to \code{\link[parallel]{makeCluster}}, for multicore
+#'   passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir} and \code{work.dir}).
 #' @return Nothing.
 #' @export
 parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.resources = list(), logging, storagedir, level, load.balancing = FALSE,
@@ -184,14 +182,14 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.res
     # create registry in selected directory with random, unique name
     fd = getBatchJobsNewRegFileDir()
     suppressMessages({
-      reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd())
+      reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd(), ...)
     })
   } else if (isModeBatchtools()) {
     fd = getBatchtoolsNewRegFileDir()
     old = getOption("batchtools.verbose")
     options(batchtools.verbose = FALSE)
     on.exit(options(batchtools.verbose = old))
-    reg = batchtools::makeRegistry(file.dir = fd, work.dir = getwd())
+    reg = batchtools::makeRegistry(file.dir = fd, work.dir = getwd(), ...)
   }
   invisible(NULL)
 }
