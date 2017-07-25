@@ -13,7 +13,7 @@
 #' @return [\code{ParallelMapOptions}]. See above.
 #' @export
 parallelGetOptions = function() {
-  opts = c("mode", "cpus", "level", "logging", "show.info", "storagedir", "bj.resources")
+  opts = c("mode", "cpus", "level", "logging", "show.info", "storagedir", "bj.resources", "bt.resources", "bj.args", "bj.args")
   settings = setNames(lapply(opts, getPMOption), opts)
   defaults = setNames(lapply(opts, getPMDefOption), opts)
   makeS3Obj("ParallelMapOptions", settings = settings, defaults = defaults)

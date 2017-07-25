@@ -180,11 +180,13 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.res
     clusterSetRNGStream(cl = NULL)
   } else if (isModeBatchJobs()) {
     # create registry in selected directory with random, unique name
+    options(parallelMap.bj.args = list(...))
     fd = getBatchJobsNewRegFileDir()
     suppressMessages({
       reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd(), ...)
     })
   } else if (isModeBatchtools()) {
+    options(parallelMap.bt.args = list(...))
     fd = getBatchtoolsNewRegFileDir()
     old = getOption("batchtools.verbose")
     options(batchtools.verbose = FALSE)

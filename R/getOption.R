@@ -48,8 +48,16 @@ getPMOptBatchJobsResources = function() {
   getPMOption("bj.resources", list())
 }
 
+getPMOptBatchJobsArgs = function() {
+  getPMOption("bj.args", list())
+}
+
 getPMOptBatchtoolsResources = function() {
   getPMOption("bt.resources", list())
+}
+
+getPMOptBatchtoolsArgs = function() {
+  getPMOption("bt.args", list())
 }
 
 getPMOptNextMap = function() {
