@@ -82,7 +82,7 @@
 #' @param ... [any]\cr
 #'   Optional parameters, for socket mode passed to \code{\link[parallel]{makePSOCKcluster}},
 #'   for mpi mode passed to \code{\link[parallel]{makeCluster}}, for multicore
-#'   passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir} and \code{work.dir}).
+#'   passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir}).
 #' @return Nothing.
 #' @export
 parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.resources = list(), logging, storagedir, level, load.balancing = FALSE,
@@ -191,7 +191,8 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.res
     old = getOption("batchtools.verbose")
     options(batchtools.verbose = FALSE)
     on.exit(options(batchtools.verbose = old))
-    reg = batchtools::makeRegistry(file.dir = fd, work.dir = getwd(), ...)
+    an = intersect(names(getPMOptBatchtoolsArgs()), names(formals(batchtools::makeRegistry)))
+    reg = do.call(batchtools::makeRegistry, args = c(list(file.dir = fd), getPMOptBatchtoolsArgs()[an]))
   }
   invisible(NULL)
 }
@@ -233,7 +234,7 @@ parallelStartBatchJobs = function(bj.resources = list(), logging, storagedir, le
 
 #' @export
 #' @rdname parallelStart
-parallelStartBatchtools = function(bt.resources = list(), logging, storagedir, level, show.info, ...) {
+parallelStartBatchtools = function(bt.resources = list(), logging, storagedir, work.dir = getwd(), level, show.info, ...) {
   parallelStart(mode = MODE_BATCHTOOLS, level = level, logging = logging,
-    storagedir = storagedir, bt.resources = bt.resources, show.info = show.info, ...)
+    storagedir = storagedir, work.dir = work.dir, bt.resources = bt.resources, show.info = show.info, ...)
 }

@@ -28,8 +28,8 @@ parallelStartMPI(cpus, logging, storagedir, level, load.balancing = FALSE,
 parallelStartBatchJobs(bj.resources = list(), logging, storagedir, level,
   show.info, ...)
 
-parallelStartBatchtools(bt.resources = list(), logging, storagedir, level,
-  show.info, ...)
+parallelStartBatchtools(bt.resources = list(), logging, storagedir,
+  work.dir = getwd(), level, show.info, ...)
 }
 \arguments{
 \item{mode}{[\code{character(1)}]\cr
@@ -103,7 +103,7 @@ Default ist FALSE, i.e. every error message is shown.}
 \item{...}{[any]\cr
 Optional parameters, for socket mode passed to \code{\link[parallel]{makePSOCKcluster}},
 for mpi mode passed to \code{\link[parallel]{makeCluster}}, for multicore
-passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir} and \code{work.dir}).}
+passed to \code{\link[parallel]{mcmapply}} (\code{mc.preschedule} (overwriting \code{load.balancing}), \code{mc.set.seed}, \code{mc.silent} and \code{mc.cleanup} are supported for multicore), for BatchJobs passed to \code{\link[BatchJobs]{makeRegistry}} (except \code{id}, \code{file.dir} and \code{work.dir}) and for batchtools passed to \code{\link[batchtools]{makeRegistry}} (except \code{file.dir}).}
 }
 \value{
 Nothing.
