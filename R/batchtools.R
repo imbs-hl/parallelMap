@@ -10,6 +10,7 @@ getBatchtoolsRegFileDir = function() {
 }
 
 getBatchtoolsReg = function() {
-  batchtools::loadRegistry(file.dir = getBatchtoolsRegFileDir())
+  an = intersect(names(getPMOptBatchtoolsArgs()), names(formals(batchtools::loadRegistry)))
+  do.call(batchtools::loadRegistry, args = c(list(file.dir = getBatchtoolsRegFileDir()), getPMOptBatchtoolsArgs()[an]))
 }
 
