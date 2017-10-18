@@ -183,7 +183,7 @@ parallelStart = function(mode, cpus, socket.hosts, bj.resources = list(), bt.res
     options(parallelMap.bj.args = list(...))
     fd = getBatchJobsNewRegFileDir()
     suppressMessages({
-      reg = BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd(), ...)
+      BatchJobs::makeRegistry(id = basename(fd), file.dir = fd, work.dir = getwd())
     })
   } else if (isModeBatchtools()) {
     options(parallelMap.bt.args = list(...))
