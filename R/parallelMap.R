@@ -183,9 +183,7 @@ parallelMap = function(fun, ..., more.args = list(), simplify = FALSE, use.names
 
       # copy log files of terminated jobs to designated directory
       if (!is.na(logdir)) {
-        x = batchtools::findStarted(reg = reg)
-        x$log.file = file.path(reg$file.dir, "logs", sprintf("%s.log", x$job.hash))
-        .mapply(function(id, fn) writeLines(batchtools::getLog(id, reg = reg), con = fn), x, NULL)
+        file.copy(file.path(reg$file.dir, "logs", getJobStatus(reg = reg)$log.file), logdir)
       }
 
       if (ok) {
